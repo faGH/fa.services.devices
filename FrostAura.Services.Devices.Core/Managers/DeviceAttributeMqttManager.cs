@@ -77,14 +77,21 @@ namespace FrostAura.Services.Devices.Core.Managers
         /// <param name="payload">Raw stringified payload.</param>
         private async Task HandleIncomingMessageAsync(string payload)
         {
-            if (string.IsNullOrWhiteSpace(payload)) return;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(payload)) return;
 
-            // Get mapped attributes from payload, based on config.
-            (var identifier, var attributes) = _payloadManager.ToMappedDictionary(payload, _config.Mappings);
+                // Get mapped attributes from payload, based on config.
+                (var identifier, var attributes) = _payloadManager.ToMappedDictionary(payload, _config.Mappings);
 
-            // Add device attributes.
-            await  _deviceManager.AddDeviceAttributesAsync(identifier, attributes);
-            _logger.LogDebug($"{attributes.Count} attributes logged for device '{identifier}'.");
+                // Add device attributes.
+                await _deviceManager.AddDeviceAttributesAsync(identifier, attributes);
+                _logger.LogDebug($"{attributes.Count} attributes logged for device '{identifier}'.");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"An error occured in HandleIncomingMessageAsync: {e.Message}", e);
+            }
         }
 
         /// <summary>

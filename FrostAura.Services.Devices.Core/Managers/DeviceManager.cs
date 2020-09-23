@@ -39,9 +39,9 @@ namespace FrostAura.Services.Devices.Core.Managers
         /// </summary>
         /// <param name="identifier">Device identifier.</param>
         /// <param name="attributes">Device attributes.</param>
-        public Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes)
+        public async Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
     }
 }
