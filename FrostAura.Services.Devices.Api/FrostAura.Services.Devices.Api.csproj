@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FrostAura.Libraries.Core" Version="1.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FrostAura.Services.Devices.Core\FrostAura.Services.Devices.Core.csproj" />
+    <ProjectReference Include="..\FrostAura.Services.Devices.Data\FrostAura.Services.Devices.Data.csproj" />
+    <ProjectReference Include="..\FrostAura.Services.Devices.Shared\FrostAura.Services.Devices.Shared.csproj" />
+  </ItemGroup>
+
+
+</Project>

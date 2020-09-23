@@ -1,0 +1,17 @@
+﻿# Specify base image.
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+WORKDIR /app
+
+# Copy everything and restore / publish the solution.
+COPY . ./
+RUN dotnet build ./FrostAura.Services.Devices.Api/FrostAura.Services.Devices.Api.csproj
+RUN dotnet test ./FrostAura.Services.Devices.Core.Tests/FrostAura.Services.Devices.Core.Tests.csproj
+RUN dotnet test ./FrostAura.Services.Devices.Data.Tests/FrostAura.Services.Devices.Data.Tests.csproj
+RUN dotnet publish ./FrostAura.Services.Devices.Api/FrostAura.Services.Devices.Api.csproj -c Release -o /app/out
+
+# Build runtime image off the correct base.
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "FrostAura.Services.Devices.Api.dll"]
+EXPOSE 80
