@@ -1,9 +1,11 @@
 ﻿using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace FrostAura.Services.Devices.Data.Extensions
 {
@@ -32,7 +34,14 @@ namespace FrostAura.Services.Devices.Data.Extensions
         /// <returns>Application services collection.</returns>
         private static IServiceCollection AddConfig(this IServiceCollection services, IConfiguration config)
         {
+            var devicesConnectionString = config.GetConnectionString("DevicesDbConnection");
+            var migrationsAssembly = typeof(DevicesDbContext).GetTypeInfo().Assembly.GetName().Name;
+
             return services
+                .AddDbContext<DevicesDbContext>(config =>
+                {
+                    config.UseSqlServer(devicesConnectionString);
+                })
                 .AddOptions()
                 .Configure<List<MqttAttributeProviderConfig>>(config.GetSection("MqttAttributeProviders"));
         }

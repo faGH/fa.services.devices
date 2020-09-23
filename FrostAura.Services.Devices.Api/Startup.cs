@@ -8,10 +8,6 @@ using System.Threading;
 using FrostAura.Services.Devices.Core.Extensions;
 using FrostAura.Services.Devices.Data.Extensions;
 using FrostAura.Services.Devices.Core.Interfaces;
-using FrostAura.Services.Devices.Shared.Models;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace FrostAura.Services.Devices.Api
 {
@@ -67,6 +63,7 @@ namespace FrostAura.Services.Devices.Api
                 {
                     c.SwaggerEndpoint(Configuration.GetValue<string>("Documentation:Url"), Configuration.GetValue<string>("Documentation:Name"));
                 });
+            app.UseFrostAuraResources<Startup>();
             serviceProvider
                 .GetService<IMqttManager>()?
                 .InitializeAsync(CancellationToken.None)
