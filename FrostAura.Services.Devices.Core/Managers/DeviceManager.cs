@@ -1,6 +1,7 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
 using FrostAura.Services.Devices.Core.Interfaces;
 using FrostAura.Services.Devices.Data.Interfaces;
+using FrostAura.Services.Devices.Shared.Models.Entities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -41,7 +42,8 @@ namespace FrostAura.Services.Devices.Core.Managers
         /// <param name="attributes">Device attributes.</param>
         public async Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes)
         {
-            //throw new System.NotImplementedException();
+            await _deviceResource.UpsertAsync(new Device { Name = identifier });
+            await _deviceResource.AddDeviceAttributesAsync(identifier, attributes);
         }
     }
 }

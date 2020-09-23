@@ -9,6 +9,19 @@ namespace FrostAura.Services.Devices.Data
     public class DevicesDbContext : DbContext
     {
         /// <summary>
+        /// Mapped devices.
+        /// </summary>
+        public virtual DbSet<Device> Devices { get; set; }
+        /// <summary>
+        /// Mapped attributes.
+        /// </summary>
+        public virtual DbSet<Attribute> Attributes { get; set; }
+        /// <summary>
+        /// Mapped attribute values.
+        /// </summary>
+        public virtual DbSet<DeviceAttribute> DeviceAttributes { get; set; }
+
+        /// <summary>
         /// Construct and allow for passing options.
         /// </summary>
         /// <param name="options">Db creation options.</param>

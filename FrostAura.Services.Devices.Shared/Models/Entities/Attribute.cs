@@ -19,6 +19,6 @@ namespace FrostAura.Services.Devices.Shared.Models.Entities
         /// <summary>
         /// Device attributes.
         /// </summary>
-        public virtual ICollection<DeviceAttribute> Devices { get; set; } = new List<DeviceAttribute>();
+        public virtual ICollection<DeviceAttribute> DeviceAttributes { get; set; } = new List<DeviceAttribute>();
     }
 }
