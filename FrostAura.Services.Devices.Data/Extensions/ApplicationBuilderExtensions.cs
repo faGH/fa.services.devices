@@ -1,4 +1,6 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
+using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,9 +31,9 @@ namespace FrostAura.Services.Devices.Data.Extensions
             {
                 try
                 {
-                    var response = InitializeDatabasesAsync<TCaller>(app).GetAwaiter().GetResult();
+                    InitializeDatabasesAsync<TCaller>(app).GetAwaiter().GetResult();
 
-                    return response;
+                    break;
                 }
                 catch (Exception e)
                 {
@@ -40,7 +42,9 @@ namespace FrostAura.Services.Devices.Data.Extensions
                 }
             }
 
-            return null;
+            return app
+                .UseGraphQL("/graphql")
+                .UsePlayground(new PlaygroundOptions { Path = "/playground", QueryPath = "/graphql" });
         }
 
         /// <summary>
@@ -65,7 +69,6 @@ namespace FrostAura.Services.Devices.Data.Extensions
                 devicesDbContext
                     .Database
                     .Migrate();
-
 
                 // Seed data goes here.
 

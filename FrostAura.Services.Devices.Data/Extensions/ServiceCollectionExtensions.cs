@@ -1,6 +1,10 @@
-﻿using FrostAura.Services.Devices.Data.Interfaces;
+﻿using FrostAura.Services.Devices.Data.GraphQl.Queries;
+using FrostAura.Services.Devices.Data.GraphQl.Types;
+using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;
+using HotChocolate;
+using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +58,11 @@ namespace FrostAura.Services.Devices.Data.Extensions
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services
+                .AddGraphQL(SchemaBuilder
+                    .New()
+                    .AddQueryType<ApplicationQuery>()
+                    .Create(),
+                    new QueryExecutionOptions { ForceSerialExecution = true })
                 .AddSingleton<IConfigurationResource, OptionsConfigurationResource>()
                 .AddSingleton<IMqttResource, MqttDotNetResource>()
                 .AddSingleton<IDeviceResource, DeviceResource>();

@@ -97,6 +97,8 @@ namespace FrostAura.Services.Devices.Data.Resources
 
                 foreach (var attr in attributes)
                 {
+                    if (string.IsNullOrWhiteSpace(attr.Value)) continue;
+
                     var attribute = await db.Attributes.FirstOrDefaultAsync(a => a.Name == attr.Key);
 
                     if(attribute == null)

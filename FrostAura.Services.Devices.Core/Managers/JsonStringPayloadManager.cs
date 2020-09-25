@@ -57,7 +57,7 @@ namespace FrostAura.Services.Devices.Core.Managers
             foreach (var mapping in mappings)
             {
                 var value = parsedPayload
-                    .SelectToken(mapping.Source)
+                    .SelectToken(mapping.Source)?
                     .ToString();
 
                 if (string.IsNullOrWhiteSpace(mapping.Destination)) continue;
@@ -71,7 +71,7 @@ namespace FrostAura.Services.Devices.Core.Managers
                 .First(m => m.IsDeviceIdentifier)
                 .Source;
             var identifierValue = parsedPayload
-                .SelectToken(identifierSource)
+                .SelectToken(identifierSource)?
                 .ToString();
 
             return (identifierValue, result);

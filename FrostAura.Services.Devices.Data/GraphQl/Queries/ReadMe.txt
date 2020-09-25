@@ -1,0 +1,1 @@
+﻿Add all queries to ServiceCollectionExtensions.cs
