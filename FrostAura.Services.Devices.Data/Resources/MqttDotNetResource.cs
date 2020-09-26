@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Connecting;
+using MQTTnet.Client.Disconnecting;
 using MQTTnet.Client.Options;
 using MQTTnet.Client.Receiving;
 using MQTTnet.Client.Subscribing;
@@ -70,6 +71,8 @@ namespace FrostAura.Services.Devices.Data.Resources
                     .WithCleanSession()
                     .Build();
 
+                _client?.Dispose();
+
                 _client = factory.CreateMqttClient();
                 _client.ConnectedHandler = new MqttClientConnectedHandlerDelegate(async args =>
                 {
@@ -81,7 +84,13 @@ namespace FrostAura.Services.Devices.Data.Resources
                         .Build();
 
                     _logger.LogDebug($"Connected to MQTT server '{_config.Server}'. Subscribing to topic '{_config.Topic}'.");
-                    await _client.SubscribeAsync(topic, CancellationToken.None);
+                    await _client.SubscribeAsync(topic, token);
+                });
+                _client.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(async args =>
+                {
+                    _logger.LogWarning($"Disconnected from MQTT server '{_config.Server}'. Attempting to reconnect now.");
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await InitializeAsync(token);
                 });
                 _client.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(HandleIncomingMessage);
 
