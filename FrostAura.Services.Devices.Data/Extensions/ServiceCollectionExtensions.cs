@@ -1,5 +1,4 @@
 ﻿using FrostAura.Services.Devices.Data.GraphQl.Queries;
-using FrostAura.Services.Devices.Data.GraphQl.Types;
 using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;

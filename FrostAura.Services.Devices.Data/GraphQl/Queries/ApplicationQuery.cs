@@ -2,7 +2,6 @@
 using FrostAura.Services.Devices.Shared.Models.Entities;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +18,6 @@ namespace FrostAura.Services.Devices.Data.GraphQl.Queries
         /// </summary>
         /// <param name="db">Database context.</param>
         /// <returns>Collection of queryable devices.</returns>
-        [UsePaging]
         [UseSelection]
         [UseFiltering]
         [UseSorting]
@@ -50,7 +48,6 @@ namespace FrostAura.Services.Devices.Data.GraphQl.Queries
         /// </summary>
         /// <param name="db">Database context.</param>
         /// <returns>Collection of queryable attributes.</returns>
-        [UsePaging]
         [UseSelection]
         [UseFiltering]
         [UseSorting]

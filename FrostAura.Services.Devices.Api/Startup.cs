@@ -48,6 +48,7 @@ namespace FrostAura.Services.Devices.Api
         /// </summary>
         /// <param name="app">Application builder.</param>
         /// <param name="env">Hosting environment context.</param>
+        /// <param name="serviceProvider">Service provider.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
