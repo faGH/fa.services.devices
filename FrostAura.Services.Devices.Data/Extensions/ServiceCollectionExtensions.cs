@@ -1,7 +1,8 @@
-﻿using FrostAura.Services.Devices.Data.GraphQl.Queries;
+﻿using FrostAura.Services.Devices.Data.GraphQl.Types;
 using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;
+using FrostAura.Services.Devices.Shared.Models.GraphQl;
 using HotChocolate;
 using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,10 @@ namespace FrostAura.Services.Devices.Data.Extensions
             return services
                 .AddGraphQL(SchemaBuilder
                     .New()
-                    .AddQueryType<ApplicationQuery>()
+                    .AddType<DeviceType>()
+                    .AddType<DeviceAttributeType>()
+                    .AddType<AttributeType>()
+                    .AddQueryType<Query>()
                     .Create(),
                     new QueryExecutionOptions { ForceSerialExecution = true })
                 .AddSingleton<IConfigurationResource, OptionsConfigurationResource>()

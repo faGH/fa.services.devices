@@ -1,7 +1,7 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
 using FrostAura.Services.Devices.Core.Interfaces;
 using FrostAura.Services.Devices.Data.Interfaces;
-using FrostAura.Services.Devices.Shared.Models.Entities;
+using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;

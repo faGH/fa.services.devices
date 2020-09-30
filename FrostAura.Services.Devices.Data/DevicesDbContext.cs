@@ -1,4 +1,4 @@
-﻿using FrostAura.Services.Devices.Shared.Models.Entities;
+﻿using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FrostAura.Services.Devices.Data

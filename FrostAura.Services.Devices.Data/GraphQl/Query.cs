@@ -1,23 +1,27 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
-using FrostAura.Services.Devices.Shared.Models.Entities;
+using FrostAura.Services.Devices.Data;
+using FrostAura.Services.Devices.Data.GraphQl.Types;
+using FrostAura.Services.Devices.Data.Models.Entities;
 using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FrostAura.Services.Devices.Data.GraphQl.Queries
+namespace FrostAura.Services.Devices.Shared.Models.GraphQl
 {
     /// <summary>
-    /// GraphQL devices query.
+    /// GraphQL shema query.
     /// </summary>
-    public class ApplicationQuery
+    public class Query
     {
         /// <summary>
         /// Devices query for GraphQL.
         /// </summary>
         /// <param name="db">Database context.</param>
         /// <returns>Collection of queryable devices.</returns>
+        [UsePaging(SchemaType = typeof(DeviceType))]
         [UseSelection]
         [UseFiltering]
         [UseSorting]
@@ -48,6 +52,7 @@ namespace FrostAura.Services.Devices.Data.GraphQl.Queries
         /// </summary>
         /// <param name="db">Database context.</param>
         /// <returns>Collection of queryable attributes.</returns>
+        [UsePaging(SchemaType = typeof(AttributeType))]
         [UseSelection]
         [UseFiltering]
         [UseSorting]

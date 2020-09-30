@@ -1,4 +1,4 @@
-﻿using FrostAura.Services.Devices.Shared.Models.Entities;
+﻿using FrostAura.Services.Devices.Data.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

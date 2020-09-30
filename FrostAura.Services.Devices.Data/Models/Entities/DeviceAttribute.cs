@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace FrostAura.Services.Devices.Shared.Models.Entities
+namespace FrostAura.Services.Devices.Data.Models.Entities
 {
     /// <summary>
     /// Device attribute entity.

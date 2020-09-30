@@ -1,6 +1,6 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
 using FrostAura.Services.Devices.Data.Interfaces;
-using FrostAura.Services.Devices.Shared.Models.Entities;
+using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
