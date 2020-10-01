@@ -8,6 +8,7 @@ using System.Threading;
 using FrostAura.Services.Devices.Core.Extensions;
 using FrostAura.Services.Devices.Data.Extensions;
 using FrostAura.Services.Devices.Core.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FrostAura.Services.Devices.Api
 {
@@ -37,6 +38,13 @@ namespace FrostAura.Services.Devices.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", config =>
+                {
+                    config.Authority = Configuration.GetValue<string>("Identity:Authority");
+                    config.Audience = Configuration.GetValue<string>("Identity:Audience");
+                });
+            services
                 .AddFrostAuraCore(Configuration)
                 .AddFrostAuraResources(Configuration)
                 .AddSwaggerGen()
@@ -64,19 +72,20 @@ namespace FrostAura.Services.Devices.Api
                 {
                     c.SwaggerEndpoint(Configuration.GetValue<string>("Documentation:Url"), Configuration.GetValue<string>("Documentation:Name"));
                 });
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
             app.UseFrostAuraResources<Startup>();
             serviceProvider
                 .GetService<IMqttManager>()?
                 .InitializeAsync(CancellationToken.None)
                 .GetAwaiter()
                 .GetResult();
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
         }
     }
 }

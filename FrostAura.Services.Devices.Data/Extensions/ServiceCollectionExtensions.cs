@@ -5,7 +5,9 @@ using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;
 using FrostAura.Services.Devices.Shared.Models.GraphQl;
 using HotChocolate;
+using HotChocolate.AspNetCore.Subscriptions;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,13 +61,19 @@ namespace FrostAura.Services.Devices.Data.Extensions
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             return services
-                .AddGraphQL(SchemaBuilder
+                // TODO: Redis integration for multi-instance support.
+                .AddInMemorySubscriptions()
+                .AddInMemorySubscriptionProvider()
+                .AddGraphQL(s => SchemaBuilder
                     .New()
+                    .AddServices(s)
                     .AddType<DeviceType>()
                     .AddType<DeviceAttributeType>()
                     .AddType<AttributeType>()
                     .AddQueryType<Query>()
                     .AddMutationType<Mutation>()
+                    .AddAuthorizeDirectiveType()
+                    .AddSubscriptionType<Subscription>()
                     .Create(),
                     new QueryExecutionOptions { ForceSerialExecution = true })
                 .AddSingleton<IConfigurationResource, OptionsConfigurationResource>()

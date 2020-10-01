@@ -28,6 +28,7 @@ namespace FrostAura.Services.Devices.Data.GraphQl.Types
                 .Field(d => d.DeviceAttributes)
                 .Description("A collection of all device attribute values.")
                 .Type<ListType<DeviceAttributeType>>();
+            descriptor.Authorize();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
 using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Models.Entities;
+using HotChocolate.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,10 @@ namespace FrostAura.Services.Devices.Data.Resources
         /// </summary>
         private readonly IServiceScopeFactory _scopeFactory;
         /// <summary>
+        /// GraphQL event emitter.
+        /// </summary>
+        private readonly ITopicEventSender _eventEmitter;
+        /// <summary>
         /// Instance logger.
         /// </summary>
         private readonly ILogger _logger;
@@ -32,14 +37,18 @@ namespace FrostAura.Services.Devices.Data.Resources
         /// </summary>
         /// <param name="configurationResource">Configuration resource.</param>
         /// <param name="devicesDbContext">Devices DB context.</param>
+        /// <param name="scopeFactory">Application scope factory.</param>
+        /// <param name="eventEmitter">GraphQL event emitter.</param>
         /// <param name="logger">Instance logger.</param>
-        public DeviceResource(IConfigurationResource configurationResource, IServiceScopeFactory scopeFactory, ILogger<DeviceResource> logger)
+        public DeviceResource(IConfigurationResource configurationResource, IServiceScopeFactory scopeFactory, ITopicEventSender eventEmitter, ILogger<DeviceResource> logger)
         {
             configurationResource
                 .ThrowIfNull(nameof(configurationResource))
                 .GetMqttAttributeProviders();
             _scopeFactory = scopeFactory
                 .ThrowIfNull(nameof(scopeFactory));
+            _eventEmitter = eventEmitter
+                .ThrowIfNull(nameof(eventEmitter));
             _logger = logger
                 .ThrowIfNull(nameof(logger));
         }
@@ -71,6 +80,7 @@ namespace FrostAura.Services.Devices.Data.Resources
                     dbDevice.Name = device.Name;
 
                     db.Devices.Update(dbDevice);
+                    device = dbDevice;
                     _logger.LogDebug("Device already exists. Using it.");
                 }
                 else
@@ -80,6 +90,7 @@ namespace FrostAura.Services.Devices.Data.Resources
                 }
 
                 await db.SaveChangesAsync(token);
+                await _eventEmitter.SendAsync("devices", device);
 
                 return device;
             }
@@ -118,9 +129,12 @@ namespace FrostAura.Services.Devices.Data.Resources
 
                     _logger.LogDebug($"Capturing value for attribute with name '{attr.Key}': '{attr.Value}'");
 
-                    attribute.DeviceAttributes.Add(new DeviceAttribute { DeviceId = device.Id, Value = attr.Value });
+                    var deviceAttr = new DeviceAttribute { DeviceId = device.Id, Value = attr.Value };
+
+                    attribute.DeviceAttributes.Add(deviceAttr);
 
                     await db.SaveChangesAsync(token);
+                    await _eventEmitter.SendAsync($"device.{device.Id}.attributes", device);
                 }
             }
         }

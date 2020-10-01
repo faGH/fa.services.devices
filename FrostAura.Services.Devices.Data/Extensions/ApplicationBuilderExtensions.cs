@@ -43,6 +43,7 @@ namespace FrostAura.Services.Devices.Data.Extensions
             }
 
             return app
+                .UseWebSockets()
                 .UseGraphQL("/graphql")
                 .UsePlayground(new PlaygroundOptions { Path = "/playground", QueryPath = "/graphql" });
         }

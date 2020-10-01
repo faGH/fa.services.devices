@@ -30,6 +30,7 @@ namespace FrostAura.Services.Devices.Data.GraphQl.Types
                 .Field(d => d.Device)
                 .Description("The attribute that this value is for.")
                 .Type<AttributeType>();
+            descriptor.Authorize();
         }
     }
 }

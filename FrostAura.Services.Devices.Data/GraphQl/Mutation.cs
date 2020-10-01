@@ -33,6 +33,7 @@ namespace FrostAura.Services.Devices.Data.GraphQl
         /// Create or update a device.
         /// </summary>
         /// <param name="request">Device to upsert.</param>
+        /// <param name="token">Cancellation token.</param>
         /// <returns>Upserted device context.</returns>
         public async Task<Device> UpsertDeviceAsync(DeviceRequest request, CancellationToken token)
         {
