@@ -4,8 +4,12 @@ using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
+using Attribute = FrostAura.Services.Devices.Data.Models.Entities.Attribute;
 
 namespace FrostAura.Services.Devices.Data.Resources
 {
@@ -41,17 +45,15 @@ namespace FrostAura.Services.Devices.Data.Resources
         }
 
         /// <summary>
-        /// Add or update a device.
+        /// Add or update a device by its selector.
         /// </summary>
         /// <param name="device">Device to upsert.</param>
-        /// <returns></returns>
-        public async Task<Device> UpsertAsync(Device device)
+        /// <param name="identifierExpression">Selector for the identifier to use to do a DB comparison.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>Device context.</returns>
+        public async Task<Device> UpsertAsync(Device device, Expression<Func<Device, bool>> identifierExpression, CancellationToken token)
         {
-            device
-                .Name
-                .ThrowIfNullOrWhitespace(nameof(device.Name));
-
-            using(var scope = _scopeFactory.CreateScope())
+            using (var scope = _scopeFactory.CreateScope())
             {
                 var db = scope
                     .ServiceProvider
@@ -59,21 +61,25 @@ namespace FrostAura.Services.Devices.Data.Resources
                 var dbDevice = await db
                     .Devices
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(d => d.Name == device.Name);
+                    .FirstOrDefaultAsync(identifierExpression, token);
 
-                if(dbDevice != null)
+                if (dbDevice != null)
                 {
-                    device.Id = dbDevice.Id;
-                    db.Devices.Update(device);
-                    _logger.LogDebug($"Device with name '{dbDevice.Name}' already exists. Using it.");
+                    if (string.IsNullOrWhiteSpace(device.Name) || dbDevice.Name == device.Name) return dbDevice;
+
+                    // All future fields that may require updating, should go beneith here.
+                    dbDevice.Name = device.Name;
+
+                    db.Devices.Update(dbDevice);
+                    _logger.LogDebug("Device already exists. Using it.");
                 }
                 else
                 {
                     db.Devices.Add(device);
-                    _logger.LogDebug($"Device with name '{device.Name}' does not yet exists. Creating it.");
+                    _logger.LogDebug("Device does not yet exists. Creating it.");
                 }
 
-                await db.SaveChangesAsync();
+                await db.SaveChangesAsync(token);
 
                 return device;
             }
@@ -82,16 +88,14 @@ namespace FrostAura.Services.Devices.Data.Resources
         /// <summary>
         /// Add device attributes.
         /// </summary>
-        /// <param name="deviceName">Unique device name / identifier.</param>
+        /// <param name="device">Device context.</param>
         /// <param name="attributes">Key value collection of attribute names and values.</param>
-        /// <returns></returns>
-        public async Task AddDeviceAttributesAsync(string deviceName, IDictionary<string, string> attributes)
+        /// <param name="token">Cancellation token.</param>
+        public async Task AddDeviceAttributesAsync(Device device, IDictionary<string, string> attributes, CancellationToken token)
         {
-            // TODO: Migrate to AttributeResource.
             using (var scope = _scopeFactory.CreateScope())
             {
                 var db = scope.ServiceProvider.GetService<DevicesDbContext>();
-                var device = await db.Devices.FirstAsync(d => d.Name == deviceName);
 
                 _logger.LogDebug($"Inserting {attributes.Count} attribute(s) for device with name '{device.Name}'.");
 
@@ -99,24 +103,24 @@ namespace FrostAura.Services.Devices.Data.Resources
                 {
                     if (string.IsNullOrWhiteSpace(attr.Value)) continue;
 
-                    var attribute = await db.Attributes.FirstOrDefaultAsync(a => a.Name == attr.Key);
+                    var attribute = await db.Attributes.FirstOrDefaultAsync(a => a.Name == attr.Key, token);
 
-                    if(attribute == null)
+                    if (attribute == null)
                     {
                         _logger.LogDebug($"Creating new attribute with name '{attr.Key}'.");
 
                         attribute = new Attribute { Name = attr.Key };
-                        
+
                         db.Attributes.Add(attribute);
 
-                        await db.SaveChangesAsync();
+                        await db.SaveChangesAsync(token);
                     }
 
                     _logger.LogDebug($"Capturing value for attribute with name '{attr.Key}': '{attr.Value}'");
 
                     attribute.DeviceAttributes.Add(new DeviceAttribute { DeviceId = device.Id, Value = attr.Value });
 
-                    await db.SaveChangesAsync();
+                    await db.SaveChangesAsync(token);
                 }
             }
         }

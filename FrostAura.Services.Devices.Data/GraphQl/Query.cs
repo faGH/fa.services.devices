@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace FrostAura.Services.Devices.Shared.Models.GraphQl
 {
     /// <summary>
-    /// GraphQL shema query.
+    /// GraphQL shema queries.
     /// </summary>
     public class Query
     {

@@ -195,7 +195,7 @@ namespace FrostAura.Services.Devices.Core.Tests.Managers
 
             deviceManager
                 .Received()
-                .AddDeviceAttributesAsync(identifier, Arg.Is<IDictionary<string, string>>(d => d.Any() && d.First().Key == identifier && d.First().Value == value));
+                .AddDeviceAttributesAsync(identifier, Arg.Is<IDictionary<string, string>>(d => d.Any() && d.First().Key == identifier && d.First().Value == value), Arg.Any<CancellationToken>());
         }
     }
 }

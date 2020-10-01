@@ -1,4 +1,5 @@
-﻿using FrostAura.Services.Devices.Data.GraphQl.Types;
+﻿using FrostAura.Services.Devices.Data.GraphQl;
+using FrostAura.Services.Devices.Data.GraphQl.Types;
 using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Resources;
 using FrostAura.Services.Devices.Shared.Models;
@@ -64,6 +65,7 @@ namespace FrostAura.Services.Devices.Data.Extensions
                     .AddType<DeviceAttributeType>()
                     .AddType<AttributeType>()
                     .AddQueryType<Query>()
+                    .AddMutationType<Mutation>()
                     .Create(),
                     new QueryExecutionOptions { ForceSerialExecution = true })
                 .AddSingleton<IConfigurationResource, OptionsConfigurationResource>()

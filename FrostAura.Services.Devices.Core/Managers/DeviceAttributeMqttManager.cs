@@ -82,11 +82,11 @@ namespace FrostAura.Services.Devices.Core.Managers
                 if (string.IsNullOrWhiteSpace(payload)) return;
 
                 // Get mapped attributes from payload, based on config.
-                (var identifier, var attributes) = _payloadManager.ToMappedDictionary(payload, _config.Mappings);
+                (var deviceName, var attributes) = _payloadManager.ToMappedDictionary(payload, _config.Mappings);
 
                 // Add device attributes.
-                await _deviceManager.AddDeviceAttributesAsync(identifier, attributes);
-                _logger.LogDebug($"{attributes.Count} attributes logged for device '{identifier}'.");
+                await _deviceManager.AddDeviceAttributesAsync(deviceName, attributes, CancellationToken.None);
+                _logger.LogDebug($"{attributes.Count} attributes logged for device '{deviceName}'.");
             }
             catch (Exception e)
             {

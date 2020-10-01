@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FrostAura.Services.Devices.Core.Interfaces
@@ -13,6 +14,7 @@ namespace FrostAura.Services.Devices.Core.Interfaces
         /// </summary>
         /// <param name="identifier">Device identifier.</param>
         /// <param name="attributes">Device attributes.</param>
-        Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes);
+        /// <param name="token">Cancellation token.</param>
+        Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes, CancellationToken token);
     }
 }

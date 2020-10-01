@@ -4,6 +4,7 @@ using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FrostAura.Services.Devices.Core.Managers
@@ -38,12 +39,14 @@ namespace FrostAura.Services.Devices.Core.Managers
         /// <summary>
         /// Upsert a collection of attributes for a given device identifier.
         /// </summary>
-        /// <param name="identifier">Device identifier.</param>
+        /// <param name="deviceName">Device identifier.</param>
         /// <param name="attributes">Device attributes.</param>
-        public async Task AddDeviceAttributesAsync(string identifier, IDictionary<string, string> attributes)
+        /// <param name="token">Cancellation token.</param>
+        public async Task AddDeviceAttributesAsync(string deviceName, IDictionary<string, string> attributes, CancellationToken token)
         {
-            await _deviceResource.UpsertAsync(new Device { Name = identifier });
-            await _deviceResource.AddDeviceAttributesAsync(identifier, attributes);
+            var device = await _deviceResource.UpsertAsync(new Device { Name = deviceName }, d => d.Name == deviceName, token);
+            
+            await _deviceResource.AddDeviceAttributesAsync(device, attributes, token);
         }
     }
 }
