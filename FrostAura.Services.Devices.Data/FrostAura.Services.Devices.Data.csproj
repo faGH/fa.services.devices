@@ -26,6 +26,7 @@
     <PackageReference Include="HotChocolate.Types.Filters" Version="10.5.3" />
     <PackageReference Include="HotChocolate.Types.Selections" Version="10.5.3" />
     <PackageReference Include="HotChocolate.Types.Sorting" Version="10.5.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />

@@ -8,7 +8,7 @@ using System.Threading;
 using FrostAura.Services.Devices.Core.Extensions;
 using FrostAura.Services.Devices.Data.Extensions;
 using FrostAura.Services.Devices.Core.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
 
 namespace FrostAura.Services.Devices.Api
 {
@@ -62,6 +62,7 @@ namespace FrostAura.Services.Devices.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
