@@ -37,7 +37,7 @@ namespace FrostAura.Services.Devices.Data.Extensions
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine($"Database migration failed on try {i}.");
+                    Debug.WriteLine($"Database migration failed on try {i}: {e.Message}.");
                     Thread.Sleep(RESILIENT_BACKOFF);
                 }
             }

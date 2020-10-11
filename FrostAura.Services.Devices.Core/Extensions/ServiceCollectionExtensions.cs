@@ -27,6 +27,7 @@ namespace FrostAura.Services.Devices.Core.Extensions
         /// Add all required application engines configuration to the DI container.
         /// </summary>
         /// <param name="services">Application services collection.</param>
+        /// <param name="config">Configuration for the application.</param>
         /// <returns>Application services collection.</returns>
         private static IServiceCollection AddConfig(this IServiceCollection services, IConfiguration config)
         {
