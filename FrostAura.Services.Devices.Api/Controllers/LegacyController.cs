@@ -40,6 +40,8 @@ namespace FrostAura.Services.Devices.Api.Controllers
 
         /// <summary>
         /// Capture and log a legacy device attribute.
+        /// 
+        /// E.g. /api/PP.MK3.003/-29DOT836907/24DOT522360
         /// </summary>
         /// <param name="deviceName">Device name.</param>
         /// <param name="lat">Latitude.</param>
