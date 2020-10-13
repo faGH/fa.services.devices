@@ -10,6 +10,7 @@ FrostAura devices platform. Ideal for IoT use-cases.
 For migrations, we need to add them initially and update or re-add them each time the context changes. The actual execution of migrations happen on application start and is autonomous.
 ### Lessons Learnt
 - In order to create migrations, the DB context has to either
+    - Avoid HTTPS redirects when considering IoT devices due to their GSM modules not honoring redirects like a browser would.
     - Have a default constructor.
     - Have a IDesignTimeDbContextFactory implementation. - This allows for providing the args to the overloaded constructor during design-time as there is no DI available during that time.
     - Migration library has to be a core library and not a standard library.
