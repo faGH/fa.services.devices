@@ -1,4 +1,5 @@
 ﻿using FrostAura.Libraries.Core.Extensions.Validation;
+using FrostAura.Services.Devices.Core.Interfaces;
 using FrostAura.Services.Devices.Data.Interfaces;
 using FrostAura.Services.Devices.Data.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,9 @@ namespace FrostAura.Services.Devices.Api.Controllers
     public class LegacyController : ControllerBase
     {
         /// <summary>
-        /// Devices resource.
+        /// Devices manager.
         /// </summary>
-        private readonly IDeviceResource _deviceResource;
+        private readonly IDeviceManager _deviceManager;
         /// <summary>
         /// Instance logger.
         /// </summary>
@@ -28,12 +29,12 @@ namespace FrostAura.Services.Devices.Api.Controllers
         /// <summary>
         /// Provide dependencies.
         /// </summary>
-        /// <param name="deviceResource">Devices resource.</param>
+        /// <param name="deviceManager">Devices manager.</param>
         /// <param name="logger">Instance logger.</param>
-        public LegacyController(IDeviceResource deviceResource, ILogger<LegacyController> logger)
+        public LegacyController(IDeviceManager deviceManager, ILogger<LegacyController> logger)
         {
-            _deviceResource = deviceResource
-                .ThrowIfNull(nameof(deviceResource));
+            _deviceManager = deviceManager
+                .ThrowIfNull(nameof(deviceManager));
             _logger = logger
                 .ThrowIfNull(nameof(logger));
         }
@@ -55,14 +56,13 @@ namespace FrostAura.Services.Devices.Api.Controllers
             var name = deviceName.ThrowIfNullOrWhitespace(nameof(deviceName));
             var parsedLat = lat.ThrowIfNullOrWhitespace(nameof(lat)).Replace("DOT", ".");
             var parsedLng = lng.ThrowIfNullOrWhitespace(nameof(lng)).Replace("DOT", ".");
-            var device = new Device { Name = name };
             var attributes = new Dictionary<string, string>
             {
                 { "Latitude", parsedLat },
                 { "Longitude", parsedLng }
             };
 
-            await _deviceResource.AddDeviceAttributesAsync(device, attributes, token);
+            await _deviceManager.AddDeviceAttributesAsync(name, attributes, token);
 
             return Ok();
         }
