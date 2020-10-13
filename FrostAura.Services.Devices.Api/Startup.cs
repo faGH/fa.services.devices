@@ -73,6 +73,7 @@ namespace FrostAura.Services.Devices.Api
                 {
                     c.SwaggerEndpoint(Configuration.GetValue<string>("Documentation:Url"), Configuration.GetValue<string>("Documentation:Name"));
                 });
+            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
