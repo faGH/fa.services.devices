@@ -56,10 +56,10 @@ namespace FrostAura.Services.Devices.Data.GraphQl
         /// <returns>Whether the operation succeeded.</returns>
         public async Task<bool> UpsertAttributeValuesForDevice(DeviceAttributeRequest request, CancellationToken token)
         {
-            if(request.DeviceId <= 0) throw new ArgumentException("A valid and existing device id is required.", nameof(request.Attributes));
+            if(string.IsNullOrWhiteSpace(request.DeviceName)) throw new ArgumentException("A valid device name is required.", nameof(request.Attributes));
             if (!request.Attributes.Any()) throw new ArgumentException("One or more attributes are required.", nameof(request.Attributes));
 
-            var device = await _deviceResource.UpsertAsync(new Device { Id = request.DeviceId }, d => d.Id == request.DeviceId, token);
+            var device = await _deviceResource.UpsertAsync(new Device { Name = request.DeviceName }, d => d.Name == request.DeviceName, token);
 
             await _deviceResource.AddDeviceAttributesAsync(device.ThrowIfNull(nameof(device)), request
                 .Attributes
