@@ -89,7 +89,7 @@ namespace FrostAura.Services.Devices.Data.Resources
                 _client.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(async args =>
                 {
                     _logger.LogWarning($"Disconnected from MQTT server '{_config.Server}'. Attempting to reconnect now.");
-                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await Task.Delay(TimeSpan.FromSeconds(new Random().Next(5, 30)));
                     await InitializeAsync(token);
                 });
                 _client.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(HandleIncomingMessage);
