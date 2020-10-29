@@ -47,7 +47,9 @@ namespace FrostAura.Services.Devices.Data.Extensions
             return services
                 .AddDbContext<DevicesDbContext>(config =>
                 {
-                    config.UseSqlServer(devicesConnectionString);
+                    config
+                        .UseSqlServer(devicesConnectionString)
+                        .EnableSensitiveDataLogging();
                 })
                 .AddOptions()
                 .Configure<List<MqttAttributeProviderConfig>>(config.GetSection("MqttAttributeProviders"));
